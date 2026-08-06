@@ -1,0 +1,30 @@
+name: macOS Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+          python -m pip install pyinstaller cryptography pillow
+
+      - name: Build macOS app bundle
+        run: python build_macos.py
+
+      - name: List dist contents
+        run: ls -R dist
