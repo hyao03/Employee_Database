@@ -76,7 +76,7 @@ pyinstaller --onefile --windowed login.py
 
 The executable will be generated inside the `dist` folder.
 
-### macOS packaging
+### macOS packaging (not tested yet)
 
 On a Mac, install PyInstaller and build a `.app` bundle:
 
@@ -120,8 +120,7 @@ terminated-employee-database/
 
 ## Future Improvements
 
-- User authentication
-- Password hashing
+- MacOS Support
 - Employee photo support
 - PDF report generation
 - CSV import/export
