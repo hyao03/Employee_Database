@@ -35,3 +35,9 @@ jobs:
 
       - name: List dist contents
         run: ls -R dist
+
+      - name: Upload built macOS app
+        uses: actions/upload-artifact@v4
+        with:
+          name: EmployeeDatabase-macos-app
+          path: dist/EmployeeDatabase.app
