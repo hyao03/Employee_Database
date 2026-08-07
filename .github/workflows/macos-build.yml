@@ -23,6 +23,13 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           python -m pip install pyinstaller cryptography pillow
 
+      - name: Ensure data directory exists
+        run: |
+          if [ ! -d "data" ]; then
+            mkdir -p data
+            touch data/.gitkeep
+          fi
+
       - name: Build macOS app bundle
         run: python build_macos.py
 
