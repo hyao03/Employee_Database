@@ -45,4 +45,11 @@ run([
 if not APP_BUNDLE.exists():
     raise RuntimeError("Expected app bundle was not created at dist/EmployeeDatabase.app")
 
+# Fix PyInstaller macOS runtime naming: create a python3.11 symlink if needed.
+frameworks_dir = APP_BUNDLE / "Contents" / "Frameworks"
+python_dylib = frameworks_dir / "python3__dot__11"
+python_symlink = frameworks_dir / "python3.11"
+if python_dylib.exists() and not python_symlink.exists():
+    python_symlink.symlink_to(python_dylib.name)
+
 print(f"Built app bundle at {APP_BUNDLE}")
