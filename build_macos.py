@@ -52,4 +52,13 @@ python_symlink = frameworks_dir / "python3.11"
 if python_dylib.exists() and not python_symlink.exists():
     python_symlink.symlink_to(python_dylib.name)
 
+# Fix PyInstaller internal macOS python loader path.
+macos_dir = APP_BUNDLE / "Contents" / "MacOS"
+internal_dir = macos_dir / "_internal"
+internal_dir.mkdir(parents=True, exist_ok=True)
+internal_python = internal_dir / "Python"
+internal_target = Path("../Frameworks/python3.11")
+if not internal_python.exists():
+    internal_python.symlink_to(internal_target)
+
 print(f"Built app bundle at {APP_BUNDLE}")
