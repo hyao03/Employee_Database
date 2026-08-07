@@ -8,6 +8,7 @@ ROOT = Path(__file__).resolve().parent
 DIST = ROOT / "dist"
 APP_NAME = "EmployeeDatabase"
 APP_BUNDLE = DIST / f"{APP_NAME}.app"
+DATA_DIR = ROOT / "data"
 
 
 def run(cmd):
@@ -20,6 +21,9 @@ if APP_BUNDLE.exists():
 
 if not (ROOT / "login.py").exists():
     raise FileNotFoundError("login.py not found in project root")
+
+# Ensure the data directory exists for PyInstaller to add.
+DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 run([
     sys.executable,
