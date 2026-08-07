@@ -36,6 +36,34 @@ jobs:
       - name: List dist contents
         run: ls -R dist
 
+      - name: Diagnose and patch dylib links (attempt)
+        if: always()
+        run: |
+          set -euo pipefail
+          EXE=dist/EmployeeDatabase.app/Contents/MacOS/EmployeeDatabase
+          echo "-- Files in bundle --"
+          ls -l dist/EmployeeDatabase.app || true
+          ls -l dist/EmployeeDatabase.app/Contents || true
+          ls -l dist/EmployeeDatabase.app/Contents/Frameworks || true
+          if [ -f "$EXE" ]; then
+            echo "-- otool -L before --"
+            otool -L "$EXE" || true
+
+            # Try to replace absolute python dylib paths with @executable_path reference
+            for LIB in $(otool -L "$EXE" | tail -n +2 | awk '{print $1}' ); do
+              if [[ "$LIB" == /* ]] && [[ "$LIB" == *python3* ]]; then
+                TARGET="@executable_path/../Frameworks/python3.11"
+                echo "Patching $LIB -> $TARGET"
+                install_name_tool -change "$LIB" "$TARGET" "$EXE" || true
+              fi
+            done
+
+            echo "-- otool -L after --"
+            otool -L "$EXE" || true
+          else
+            echo "Executable not found: $EXE"
+          fi
+
       - name: Upload built macOS app
         uses: actions/upload-artifact@v4
         with:
